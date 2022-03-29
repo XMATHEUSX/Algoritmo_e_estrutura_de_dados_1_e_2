@@ -20,13 +20,9 @@ tarefa *cria_matriz(int n)
 tarefa adiciona_tarefa()
 {
     tarefa processo;
-
     scanf("%d",&processo.e);
-
     scanf("%d",&processo.d);
-
     return processo;
-
 }
 
 int main(int argc, char const *argv[])

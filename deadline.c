@@ -2,49 +2,80 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
 
-int mochila_dq(int c[], int p[], int *b, int ini, int fim)
+typedef struct
 {
-    int meio;
-    if (fim == ini)
+    int id;
+    int time_exe;
+    int deadline;
+} task;
+
+task *allocate_vector_struct(int n)
+{
+    task *temp;
+    temp = (task *)calloc(n, sizeof(task));
+    return temp;
+}
+
+task *sort_tasks(task *tv, int n)
+{
+    int *lower;
+    lower = (int *)calloc(n, sizeof(int));
+    for (int i = 0; i < n; i++)
     {
-        if ((
-                *b - p[ini] >= 0))
+        lower[i] = (tv[i].time_exe - tv[i].deadline);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 1; j < n; j++)
         {
-            *b -= p[ini];
-            return c[ini];
+            task aux;
+            if (lower[j - 1] > lower[j])
+            {
+                aux = tv[j];
+                tv[j] = tv[j - 1];
+                tv[j - 1] = aux;
+            }
         }
-        else
-            return 0;
+        for (int i = 0; i < n; i++)
+        {
+            lower[i] = (tv[i].time_exe - tv[i].deadline);
+        }
     }
-    else
-    {
-        meio = (ini + fim) / 2;
-        return mochila_dq(c, p, b, ini, meio) +
-               mochila_dq(c, p, b, meio + 1, fim);
-    }
+    free(lower);
+    return tv;
 }
-int mochila(int c[], int p[], int n, int b)
+
+int best_seq(task *t, int n)
 {
-    int aux = b;
-    return mochila_dq(c, p, n, &aux, 0, n - 1);
+    int delay = 0;
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", t[i].id);
+        delay += (t[i].time_exe - t[i].deadline);
+    }
+    if (delay < 0)
+    {
+        delay = 0;
+    }
+    return delay;
 }
+
 int main(int argc, char const *argv[])
 {
-    int ta_moc, qtd, *preco, *pesos;
-    scanf("%d", &ta_moc);
-    scanf("%d", &qtd);
-    preco = (int *)calloc(qtd, sizeof(int));
-    pesos = (int *)calloc(qtd, sizeof(int));
-    for (int i = 0; i < qtd; i++)
+    int n;
+    task *t;
+    scanf("%d", &n);
+    t = allocate_vector_struct(n);
+    for (int i = 0; i < n; i++)
     {
-        scanf("%d  %d ", &pesos[i], &preco[i]);
+        t[i].id = i;
+        scanf("%d", &t[i].time_exe);
+        scanf("%d", &t[i].deadline);
     }
-    for (int i = 0; i < qtd; i++)
-    {
-        printf("\n%d  %d ", pesos[i], preco[i]);
-    }
-    free(preco);
-    free(pesos);
+    t = sort_tasks(t, n);
+    printf("\n%d", best_seq(t, n));
+    free(t);
     return 0;
 }

@@ -3,47 +3,36 @@
 #include <math.h>
 #include <stdlib.h>
 
-int sub_max_fb( int *b,int row)
-{ int maior_global,soma, maior_local;
- 
- //sentando como o maior subsequencia o primeiro elemento
- maior_global = b[0];
-
-  for (int i = 0; i < row; i++)
+int sub_soma_fb(int *vet, int n)
+{
+  int sum = 0, biggest_suum = vet[0];
+  for (int i = 0; i < n; i++)
+  {
+    for (int j = 0; j <= i; j++)
     {
-      for (int j = 0; j < row-i; j++)
-    {
-          for(int k = j; k < j+1; k++)
-          {
-      //soma das subsequC*ncias
-      printf("%d-",b[k]);
-      soma += b[k];
-    
-      if (soma > maior_local)
-        maior_local = soma;
-              }
+      for (int k = j; k <= i; k++)
+      {
+        sum += vet[k];
+      }
+      if (sum > biggest_suum)
+        biggest_suum = sum;
+      sum = 0;
     }
-      printf("\n");
-      if (maior_local > maior_global)
-        maior_global = maior_local;
-    }
- return maior_global;
-    
+  }
+  return biggest_suum;
 }
 
-
-
-int main (int argc, char const *argv[])
+int main()
 {
-  int row, *b;
-  scanf ("%d", &row);
-  //alocando vetor b
-  b = (int *) calloc (row, sizeof (int *));
-  //atribuindo valores
-  for (int i = 0; i < row; i++)
-    scanf ("%d", &b[i]);
-  printf("%d",sub_max_fb(b,row));
-  //liberando o vetor alocado
-  free (b);
+  int n, *vet;
+  scanf("%d", &n);
+  vet = (int *)calloc(n, sizeof(int));
+  for (int i = 0; i < n; i++)
+  {
+    scanf("%d", &vet[i]);
+  }
+  printf("%d", sub_soma_fb(vet, n));
+  free(vet);
+
   return 0;
 }

@@ -3,38 +3,48 @@
 #include <math.h>
 #include <stdlib.h>
 
-typedef struct{
-    //int id; // identificador da tarefa, que será a i-ésima tarefa lida
-    int e; // tempo de execução
-    int d; // deadline
-}tarefa;
-
-tarefa *cria_matriz(int n)
+int mochila_dq(int c[], int p[], int *b, int ini, int fim)
 {
-    int i;
-    int *mat;
-    mat = (tarefa *)calloc(n, sizeof(tarefa *));
-    return mat;
+    int meio;
+    if (fim == ini)
+    {
+        if ((
+                *b - p[ini] >= 0))
+        {
+            *b -= p[ini];
+            return c[ini];
+        }
+        else
+            return 0;
+    }
+    else
+    {
+        meio = (ini + fim) / 2;
+        return mochila_dq(c, p, b, ini, meio) +
+               mochila_dq(c, p, b, meio + 1, fim);
+    }
 }
-
-tarefa adiciona_tarefa()
+int mochila(int c[], int p[], int n, int b)
 {
-    tarefa processo;
-    scanf("%d",&processo.e);
-    scanf("%d",&processo.d);
-    return processo;
+    int aux = b;
+    return mochila_dq(c, p, n, &aux, 0, n - 1);
 }
-
 int main(int argc, char const *argv[])
 {
-    int row, *b;
-    tarefa *a1;
-    scanf("%d", &row);
-    a1 = cria_matriz(row);
-    for (int i = 0; i < row; i++)
-            a1[i] = adiciona_tarefa();
-    for (int i = 0; i < row; i++)
-            printf("\n\n%d %d\n",a1[i].e , a1[i].d);
-    free(a1);
+    int ta_moc, qtd, *preco, *pesos;
+    scanf("%d", &ta_moc);
+    scanf("%d", &qtd);
+    preco = (int *)calloc(qtd, sizeof(int));
+    pesos = (int *)calloc(qtd, sizeof(int));
+    for (int i = 0; i < qtd; i++)
+    {
+        scanf("%d  %d ", &pesos[i], &preco[i]);
+    }
+    for (int i = 0; i < qtd; i++)
+    {
+        printf("\n%d  %d ", pesos[i], preco[i]);
+    }
+    free(preco);
+    free(pesos);
     return 0;
 }

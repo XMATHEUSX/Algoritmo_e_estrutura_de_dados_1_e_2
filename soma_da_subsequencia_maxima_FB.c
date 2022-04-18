@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-int sub_soma_fb(int *vet, int n)
+int sum_sub_max_fb(int *vet, int n)
 {
   int sum = 0, biggest_suum = vet[0];
   for (int i = 0; i < n; i++)
@@ -31,7 +31,7 @@ int main()
   {
     scanf("%d", &vet[i]);
   }
-  printf("%d", sub_soma_fb(vet, n));
+  printf("%d", sum_sub_max_fb(vet, n));
   free(vet);
 
   return 0;

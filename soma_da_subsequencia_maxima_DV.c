@@ -6,57 +6,58 @@
 #define max2(a, b) a > b ? a : b
 #define max3(a, b, c) max2(max2(a, b), c)
 
-int sub_max (int *vetor, int ini, int fim)
+int sum_sub_max_dv(int *v, int begin, int end)
 {
-  int soma = 0, meio, a, b, maior_soma;
-  int i, aux = 0, s_esq = INT_MIN, s_dir = INT_MIN;
-  maior_soma = vetor[ini];
-    meio = (ini+fim)/2;
-  if (fim == ini)
+  int sum = 0, middle, biggest_sum, i, aux = 0, s_left = INT_MIN, s_right = INT_MIN;
+  biggest_sum = v[begin];
+  middle = (begin + end) / 2;
+  if (end == begin)
+  {
+    if (v[begin] > biggest_sum)
     {
-      if (vetor[ini] > maior_soma)
-    {
-      maior_soma = vetor[ini];
-    }
-    }
-  else
-    {
-      for (i = meio; i >= ini; i--)
-    {
-      aux += vetor[i];
-    printf ("%d ", vetor[i]);
-
-      if (aux > s_esq)
-        s_esq = aux;
-    }
-printf ("\n ");
-      aux = 0;
-
-      for (i = meio + 1; i < fim; i++)
-    {
-      aux += vetor[i];
-printf ("%d ", vetor[i]);
-      if (aux > s_dir)
-        s_dir = aux;
-    }
-printf ("\n ");
-  soma = max3(s_esq, s_dir, s_esq + s_dir);
-
-      if (soma > maior_soma)
-    {
-      maior_soma = soma;
+      biggest_sum = v[begin];
     }
   }
-  return maior_soma;
+  else
+  {
+    for (i = middle; i >= begin; i--)
+    {
+      aux += v[i];
+      if (aux > s_left)
+      {
+        s_left = aux;
+      }
+    }
+    aux = 0;
+
+    for (i = middle + 1; i < end; i++)
+    {
+      aux += v[i];
+      if (aux > s_right)
+      {
+        s_right = aux;
+      }
+    }
+    sum = max3(s_left, s_right, s_left + s_right);
+
+    if (sum > biggest_sum)
+    {
+      biggest_sum = sum;
+    }
+  }
+  return biggest_sum;
 }
-int main (int argc, char const *argv[])
+int main()
 {
-  int row, *b;
-  scanf ("%d", &row);
-  b = (int *) calloc (row, sizeof (int *));
-  for (int i = 0; i < row; i++)
-    scanf ("%d", &b[i]);
-  printf ("%d", sub_max (b, 0, row));
-  free (b);
+  int n, *vet;
+  scanf("%d", &n);
+  vet = (int *)calloc(n, sizeof(int));
+  for (int i = 0; i < n; i++)
+  {
+    scanf("%d", &vet[i]);
+  }
+  printf("%d", sum_sub_max_dv(vet, 0, n));
+  free(vet);
+
   return 0;
 }

@@ -44,22 +44,17 @@ Sample Output 0
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>
+#define max2(a, b) a > b ? a : b
 
-typedef struct Node
+struct Node
 {
-
     int item;
     struct Node *left;
     struct Node *right;
+} typedef Node;
 
-} Node;
-
-int max(int a, int b)
-{
-    return (a > b) ? a : b;
-}
-
-Node *criar(int item)
+Node *create_node(int item)
 {
     Node *tree = (Node *)malloc(sizeof(Node));
 
@@ -70,95 +65,61 @@ Node *criar(int item)
     return tree;
 }
 
-Node *inserir(int item, Node *tree)
+Node *insert(int item, Node *tree)
 {
+
     if (tree == NULL)
-    {
-        tree = criar(item);
-    }
+        tree = create_node(item);
+
     else if (item < tree->item)
-    {
-        tree->left = inserir(item, tree->left);
-    }
+        tree->left = insert(item, tree->left);
+
     else if (item > tree->item)
-    {
-        tree->right = inserir(item, tree->right);
-    }
+        tree->right = insert(item, tree->right);
 
     return tree;
 }
 
-int altura(Node *tree)
+int height_tree(Node *tree, int deepest)
 {
-    int altD, altE;
-    Node *treeD, *treeE;
-
-    altD = 0;
-    altE = 0;
-    treeE = tree;
-    treeD = tree;
-
-    if (tree == NULL)
+    int depth1, depth2;
+    if (tree != NULL)
     {
-        return -1;
+        depth1 = max2(deepest, height_tree(tree->left, deepest));
+        depth2 = max2(deepest, height_tree(tree->right, deepest));
+        deepest = max2(depth1, depth2);
+        if (tree->left == NULL && tree->right == NULL)
+        {
+            return deepest;
+        }
+        return (deepest + 1);
     }
-    else
+    return NULL;
+}
+
+void free_tree(Node *tree)
+{
+    if (tree != NULL)
     {
-        while (treeE->left != NULL)
-        {
-            treeE = treeE->left;
-
-            if (treeE->left == NULL && treeE->right != NULL)
-            {
-                altE++;
-
-                treeE = treeE->left->right;
-            }
-
-            altE++;
-        }
-
-        while (treeD->right != NULL)
-        {
-            treeD = treeD->right;
-
-            if (treeD->right == NULL && treeD->left != NULL)
-            {
-                altD++;
-
-                treeD = tree->right->left;
-            }
-
-            altD++;
-        }
+        free_tree(tree->left);
+        free_tree(tree->right);
+        free(tree);
     }
-
-    return max(altD, altE);
 }
 
 int main()
 {
-
-    int i, num, tam;
-    Node *avr;
-
-    scanf("%d", &tam);
-
-    for (i = 0; i < tam; i++)
+    int items_tree, aux = 0, deepest = 0;
+    Node *tree;
+    scanf("%d", &items_tree);
+    scanf("%d", &aux);
+    tree = create_node(aux);
+    for (int i = 1; i < items_tree; i++)
     {
-        scanf("%d", &num);
-
-        if (i == 0)
-        {
-            avr = criar(num);
-        }
-        else
-        {
-            inserir(num, avr);
-        }
+        scanf("%d", &aux);
+        tree = insert(aux, tree);
     }
-
-    printf("%d", altura(avr));
-
+    printf("%d", height_tree(tree, deepest));
+    free_tree(tree);
     return 0;
 }

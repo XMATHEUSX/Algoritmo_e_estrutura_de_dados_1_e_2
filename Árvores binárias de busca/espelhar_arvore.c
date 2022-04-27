@@ -81,53 +81,6 @@ Node *insert(int item, Node *tree)
     return tree;
 }
 
-int height_tree(Node *tree, int deepest)
-{
-    int depth1, depth2;
-    if (tree != NULL)
-    {
-        depth1 = max2(deepest, height_tree(tree->left, deepest));
-        depth2 = max2(deepest, height_tree(tree->right, deepest));
-        deepest = max2(depth1, depth2);
-        if (tree->left == NULL && tree->right == NULL)
-        {
-            return deepest;
-        }
-        return (deepest + 1);
-    }
-    return NULL;
-}
-
-void number_leaf(Node *tree, int *leaf)
-{
-    if (tree != NULL)
-    {
-        number_leaf(tree->left, leaf);
-        number_leaf(tree->right, leaf);
-        if (tree->left == NULL && tree->right == NULL)
-        {
-            (*leaf)++;
-        }
-    }
-}
-
-int is_full(Node *tree)
-{
-    int pont, height, *leafs, elements;
-    leafs = &pont;
-    height = height_tree(tree, 0);
-    number_leaf(tree, leafs);
-    elements = pow(2, height);
-    if (elements == pont)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 void mirror_tree(Node *tree)
 {
     if (tree != NULL)

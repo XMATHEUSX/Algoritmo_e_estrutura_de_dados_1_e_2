@@ -4,60 +4,42 @@
 #include <stdlib.h>
 #include <limits.h>
 
-int rodCutting(int more[], int prices[], int rod_size)
+int rodCutting(int cuts[], int prices[], int rod_size)
 {
-    int cuts[rod_size];
 
-    int i = 0;
-
-    while (more[i] != NULL)
+    int i = 0, aux = 0, sum = 0, total = 0, biggest_price = 0;
+    int r = 0, j = 0;
+    int *num;
+    while (cuts[i] != NULL)
     {
-        cuts[i] = more[i];
         i++;
     }
-    cuts[i] = NULL;
-    int aux = 0;
-    int soma = 0;
-    int total = 0;
-    int maior_preco = 0;
-    int *num;
-    int n = 0;
-    int r = 0;
-    int j = 0, p = 0;
-    while (cuts[n] != NULL)
-    {
-        n++;
-    }
-    r = n;
+    r = i;
     num = (int *)calloc(r + 1, sizeof(int));
+    biggest_price = prices[r];
     while (num[r] == 0)
     {
-        i++;
         aux = 0;
-        soma = 0;
+        sum = 0;
+        total = 0;
+
         for (j = 0; j < r; j++)
         {
             aux = (num[j]);
-
             aux = (cuts[aux] - 1);
             total += prices[aux];
-
-            soma += aux;
+            sum += aux;
         }
-        if (soma == rod_size && total > maior_preco)
+
+        if (sum == rod_size && total > biggest_price)
         {
-            maior_preco = total;
+            biggest_price = total;
         }
-        aux = 0;
-        soma = 0;
-        total = 0;
-
         num[0]++;
 
-        // distribui os vai-uns.
         for (int i = 0; i < r; i++)
         {
-            if (num[i] == n)
+            if (num[i] == r)
             {
                 num[i] = 0;
                 num[i + 1]++;
@@ -65,28 +47,31 @@ int rodCutting(int more[], int prices[], int rod_size)
         }
     }
     free(num);
-    return maior_preco;
+    return biggest_price;
 }
 int main()
 {
     int rod_size, price_size;
     scanf("%d", &rod_size);
     scanf("%d", &price_size);
-    price_size = price_size + 1;
-    int teste[price_size];
-    int more[rod_size];
-    teste[0] = 0;
+    price_size++;
+    int prices[price_size];
+    int cuts[rod_size];
+    prices[0] = 0;
+
     for (int i = 1; i < price_size; i++)
     {
-        scanf("%d", &teste[i]);
+        scanf("%d", &prices[i]);
     }
+
     for (int i = 0; i <= rod_size; i++)
     {
-        more[i] = i + 1;
-        // printf("%d ",more[i]);
+        cuts[i] = i + 1;
     }
-    more[rod_size] = NULL;
 
-    printf("%d", rodCutting(more, teste, rod_size));
+    cuts[rod_size] = NULL;
+
+    printf("%d", rodCutting(cuts, prices, rod_size));
+
     return 0;
 }

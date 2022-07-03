@@ -75,7 +75,8 @@ int main(int argc, char const *argv[])
         scanf("%d", &t[i].deadline);
     }
     t = sort_tasks(t, n);
-    printf("\n%d", best_seq(t, n));
+    printf("\n%d", best_seq(t,
+                            n));
     free(t);
     return 0;
 }

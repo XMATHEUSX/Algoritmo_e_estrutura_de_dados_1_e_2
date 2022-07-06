@@ -2,7 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-
+#include <limits.h>
 struct Pointer
 {
     int item;
@@ -155,7 +155,6 @@ void sum_factor_bal(Node *tree, int *sum_fb)
     if (tree != NULL)
     {
         sum_factor_bal(tree->left, sum_fb);
-        printf("%d - %d\n", tree->fb, tree->item);
         if (tree->fb <= 2 && tree->fb >= -2)
         {
             *sum_fb += tree->fb;

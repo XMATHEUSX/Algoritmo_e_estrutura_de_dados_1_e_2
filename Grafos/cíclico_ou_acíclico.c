@@ -174,6 +174,5 @@ int main()
             }
         }
     }
-    // imprimir_arestas(matriz);
     busca_em_profundidade(matriz);
 }

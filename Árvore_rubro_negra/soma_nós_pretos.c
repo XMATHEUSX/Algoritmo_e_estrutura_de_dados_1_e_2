@@ -247,12 +247,11 @@ void sum_blacks(NodeVP *tree, int *black)
 {
     if (tree != NULL)
     {
-        sum_blacks(tree->left, black);
         if (tree->color == 1)
         {
             *black += tree->key;
-            printf("%d %d", tree->key, *black);
         }
+        sum_blacks(tree->left, black);
         sum_blacks(tree->right, black);
     }
 }

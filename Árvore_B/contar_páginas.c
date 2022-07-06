@@ -216,52 +216,28 @@ NodeB *inserir(NodeB *tree, int key)
     return tree;
 }
 
-int qtd_pag(NodeB *tree, int *cont)
+void qtd_pag(NodeB *tree, int *cont)
 {
-    int n = 0;
+    int n;
     if (tree != NULL)
     {
-        while (n < 5)
+        if (!(tree->eh_no_folha))
         {
-            NodeB *aux = tree->filhos[n];
-            if (aux != NULL)
+            while (n <= tree->nro_chaves)
             {
-                (*cont)++;
-                // printf("chave = %d - cont = %d\n",aux->chaves[0],*cont);
-                if (aux->eh_no_folha != 1)
+                if (tree->filhos[n]->eh_no_folha)
                 {
-                    qtd_pag(aux, cont);
+                    (*cont)++;
                 }
-            }
-            n++;
-        }
-    }
-    return 0;
-}
-int contarPaginas(NodeB *tree, int soma)
-{
-    int i;
-
-    if (tree->eh_no_folha == 0)
-    {
-        for (i = 0; i <= tree->nro_chaves; i++)
-        {
-            if (tree->filhos[i]->eh_no_folha == 1)
-            {
-                soma = soma + 1;
-            }
-            else
-            {
-                soma = contarPaginas(tree->filhos[i], soma);
+                else
+                {
+                    qtd_pag(tree->filhos[n], cont);
+                }
+                n++;
             }
         }
     }
-    else
-    {
-        return 1;
-    }
-
-    return soma + 1;
+    (*cont)++;
 }
 
 int main()
@@ -275,14 +251,8 @@ int main()
         scanf("%d", &aux);
         tree = inserir(tree, aux);
     }
-    if (tree->nro_chaves > 0)
-    {
-        pont;
-    }
-
-    // qtd_pag(tree, &pont);
-
-    printf("%d\n", contarPaginas(tree, pont));
+    qtd_pag(tree, &pont);
+    printf("%d\n", pont);
     liberar(tree);
     return 0;
 }

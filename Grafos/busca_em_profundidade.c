@@ -100,7 +100,7 @@ void busca_em_profundidade_visita(GrafoMA *G, BPS *aux, int i, int *tempo)
     {
         if (G->mat[i][j] == 1)
         {
-            printf("%d - %d\n", i, j);
+            // printf("%d - %d\n", i, j);
             if (aux[j].cor == -1)
             {
                 aux[j].pai = i;

@@ -12,16 +12,16 @@ struct GrafoMA
     int **mat;
 } typedef GrafoMA;
 
-struct Prim
+struct dijkstra
 {
     int id;
-    int key;
+    int d;
     int pai;
-} typedef Prim; // Busca em largura Struct
+} typedef dijkstra; // Busca em largura Struct
 
 typedef struct Fila
 {
-    Prim item[TAM_MAX];
+    dijkstra item[TAM_MAX];
     int ini;
     int fim;
     int tam;
@@ -71,7 +71,7 @@ int esta_na_fila(Fila *f, int id)
     return 0;
 }
 
-int enfileirar(Fila *f, Prim chave)
+int enfileirar(Fila *f, dijkstra chave)
 {
     if (f == NULL)
         f = criar_fila();
@@ -97,22 +97,22 @@ int enfileirar(Fila *f, Prim chave)
     return 0;
 }
 
-Prim *desenfileirar(Fila *f)
+dijkstra *desenfileirar(Fila *f)
 {
-    Prim *item = NULL;
+    dijkstra *item = NULL;
     int i;
-    int menor_prior = -INT_MAX;
+    int menor_prior = INT_MAX;
     int indice = 0;
 
     if (!fila_vazia(f))
     {
-        item = (Prim *)malloc(sizeof(Prim));
+        item = (dijkstra *)malloc(sizeof(dijkstra));
 
         for (int i = 0; i < f->tam; i++)
         {
-            if (f->item[i].key < menor_prior)
+            if (f->item[i].d < menor_prior)
             {
-                menor_prior = f->item[i].key;
+                menor_prior = f->item[i].d;
                 indice = i;
             }
         }
@@ -142,7 +142,7 @@ void liberar_fila(Fila *f)
         free(f);
 }
 
-void liberar_itemF(Prim *item)
+void liberar_itemF(dijkstra *item)
 {
     if (item != NULL)
         free(item);
@@ -218,24 +218,24 @@ void liberarGMA(GrafoMA *G)
     }
 }
 
-void alg_prim(GrafoMA *G, int r)
+void alg_dijkstra(GrafoMA *G, int r)
 {
 
-    Prim *u;
+    dijkstra *u;
     Fila *p = criar_fila();
     int i;
 
-    Prim aux[G->V];
+    dijkstra aux[G->V];
     aux[r].id = r;
     aux[r].pai = -1;
-    aux[r].key = 0;
+    aux[r].d = 0;
     for (int i = 0; i < G->V; i++)
     {
         if (i != r)
         {
             aux[i].id = i;
             aux[i].pai = -1;
-            aux[i].key = INT_MAX;
+            aux[i].d = INT_MAX;
         }
         enfileirar(p, aux[i]);
     }
@@ -247,20 +247,34 @@ void alg_prim(GrafoMA *G, int r)
         {
             if (G->mat[i][p->item[j].id] > 0)
             {
-                if (esta_na_fila(p, p->item[j].id) && (G->mat[i][p->item[j].id] < p->item[j].key))
+                if (esta_na_fila(p, p->item[j].id) && ((u->d + G->mat[i][p->item[j].id]) < p->item[j].d))
                 {
+                    p->item[j].d = u->d + G->mat[i][p->item[j].id];
                     p->item[j].pai = u->id;
-                    p->item[j].key = G->mat[i][p->item[j].id];
                 }
             }
         }
+
         if (u->pai < 0)
         {
-            printf("%d: -\n", u->id);
+            aux[u->id].pai = -1;
         }
         else
         {
-            printf("%d: %d\n", u->id, u->pai);
+            aux[u->id].id = u->id;
+            aux[u->id].d = u->d;
+            aux[u->id].pai = u->pai;
+        }
+    }
+    for (i = 0; i < G->V; i++)
+    {
+        if (aux[i].pai < 0)
+        {
+            printf("%d: -\n", aux[i].id);
+        }
+        else
+        {
+            printf("%d: %d\n", aux[i].id, aux[i].pai);
         }
     }
 }
@@ -282,5 +296,5 @@ int main()
             }
         }
     }
-    alg_prim(matriz, 0);
+    alg_dijkstra(matriz, 0);
 }
